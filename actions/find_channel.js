@@ -123,16 +123,19 @@ action: function(cache) {
 	const data = cache.actions[cache.index];
 	const info = parseInt(data.info);
 	const find = this.evalMessage(data.find, cache);
+	const channels = server.channels.filter(function(channel) {
+		return channel.type === 'text';
+	});
 	let result;
 	switch(info) {
 		case 0:
-			result = server.channels.find('id', find);
+			result = channels.find(element => element.id === find);
 			break;
 		case 1:
-			result = server.channels.find('name', find);
+			result = channels.find(element => element.name === find);
 			break;
 		case 2:
-			result = server.channels.find('topic', find);
+			result = channels.find(element => element.topic === find);
 			break;
 		default:
 			break;

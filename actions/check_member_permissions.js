@@ -70,35 +70,7 @@ html: function(isEvent, data) {
 <div style="padding-top: 8px; width: 80%;">
 	Permission:<br>
 	<select id="permission" class="round">
-		<option value="ADMINISTRATOR">Administrator</option>
-		<option value="CREATE_INSTANT_INVITE">Create Instant Invite</option>
-		<option value="KICK_MEMBERS">Kick Members</option>
-		<option value="BAN_MEMBERS">Ban Members</option>
-		<option value="MANAGE_CHANNELS">Manage Channels</option>
-		<option value="MANAGE_GUILD">Manage Guild</option>
-		<option value="ADD_REACTIONS">Add Reactions</option>
-		<option value="VIEW_AUDIT_LOG">View Audit Log</option>
-		<option value="READ_MESSAGES">Read Messages</option>
-		<option value="SEND_MESSAGES">Send Messages</option>
-		<option value="SEND_TTS_MESSAGES">Send TTS Messages</option>
-		<option value="MANAGE_MESSAGES">Manage Messages</option>
-		<option value="EMBED_LINKS">Embed Links</option>
-		<option value="ATTACH_FILES">Attach Files</option>
-		<option value="READ_MESSAGE_HISTORY">Read Message History</option>
-		<option value="MENTION_EVERYONE">Mention Everyone</option>
-		<option value="EXTERNAL_EMOJIS">External Emojis</option>
-		<option value="USE_EXTERNAL_EMOJIS">Use External Emojis</option>
-		<option value="CONNECT">Connect</option>
-		<option value="SPEAK">Speak</option>
-		<option value="MUTE_MEMBERS">Mute Members</option>
-		<option value="DEAFEN_MEMBERS">Deafen Members</option>
-		<option value="MOVE_MEMBERS">Move Members</option>
-		<option value="USE_VAD">Use Vad</option>
-		<option value="CHANGE_NICKNAME">Change Nickname</option>
-		<option value="MANAGE_NICKNAMES">Manage Nicknames</option>
-		<option value="MANAGE_ROLES">Manage Roles</option>
-		<option value="MANAGE_WEBHOOKS">Manage Webhooks</option>
-		<option value="MANAGE_EMOJIS">Manage Emojis</option>
+		${data.permissions[2]}
 	</select>
 </div><br>
 <div>
@@ -117,7 +89,7 @@ html: function(isEvent, data) {
 init: function() {
 	const {glob, document} = this;
 
-	glob.memberChange(document.getElementById('member'), 'varNameContainer')
+	glob.memberChange(document.getElementById('member'), 'varNameContainer');
 	glob.onChangeTrue(document.getElementById('iftrue'));
 	glob.onChangeFalse(document.getElementById('iffalse'));
 },

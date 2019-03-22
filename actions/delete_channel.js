@@ -104,7 +104,11 @@ action: function(cache) {
 	const storage = parseInt(data.storage);
 	const varName = this.evalMessage(data.varName, cache);
 	const channel = this.getChannel(storage, varName, cache);
-	if(channel && channel.delete) {
+	if(Array.isArray(channel)) {
+		this.callListFunc(channel, 'delete', []).then(function() {
+			this.callNextAction(cache);
+		}.bind(this));
+	} else if(channel && channel.delete) {
 		channel.delete().then(function(channel) {
 			this.callNextAction(cache);
 		}.bind(this)).catch(this.displayError.bind(this, data, cache));

@@ -162,7 +162,14 @@ action: function(cache) {
 	}
 	options.maxUses = Boolean(data.temporary === 'true');
 	options.unique = Boolean(data.unique === 'true');
-	if(channel && channel.createInvite) {
+	if(Array.isArray(channel)) {
+		this.callListFunc(channel, 'createInvite', [options]).then(function(invite) {
+			const varName2 = this.evalMessage(data.varName2, cache);
+			const storage2 = parseInt(data.storage);
+			this.storeValue(`https://discord.gg/${invite.code}`, storage2, varName2, cache);
+			this.callNextAction(cache);
+		}.bind(this));
+	} else if(channel && channel.createInvite) {
 		channel.createInvite(options).then(function(invite) {
 			const varName2 = this.evalMessage(data.varName2, cache);
 			const storage2 = parseInt(data.storage);

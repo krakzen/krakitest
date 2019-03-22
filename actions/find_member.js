@@ -23,10 +23,35 @@ section: "Member Control",
 //---------------------------------------------------------------------
 
 subtitle: function(data) {
-	const info = ['Member ID', 'Member Username', 'Member Display Name', 'Member Color'];
+	const info = ['Member ID', 'Member Username', 'Member Display Name', 'Member Tag', 'Member Color'];
 	return `Find Member by ${info[parseInt(data.info)]}`;
 },
 
+
+	//---------------------------------------------------------------------
+	 // DBM Mods Manager Variables (Optional but nice to have!)
+	 //
+	 // These are variables that DBM Mods Manager uses to show information
+	 // about the mods for people to see in the list.
+	 //---------------------------------------------------------------------
+
+	 // Who made the mod (If not set, defaults to "DBM Mods")
+	 author: "DBM, Lasse & MrGold",
+
+	 // The version of the mod (Defaults to 1.0.0)
+	 version: "1.9.1", //Added in 1.8.9
+
+	 // A short description to show on the mod line for this mod (Must be on a single line)
+	 short_description: "Fixed multiple issues with this default DBM action.",
+
+	 // If it depends on any other mods by name, ex: WrexMODS if the mod uses something from WrexMods
+
+
+	 //---------------------------------------------------------------------
+
+
+	 
+	 
 //---------------------------------------------------------------------
 // Action Storage Function
 //
@@ -67,6 +92,7 @@ fields: ["info", "find", "storage", "varName"],
 
 html: function(isEvent, data) {
 	return `
+<div><p>This action has been modified by DBM Mods.</p></div><br>
 <div>
 	<div style="float: left; width: 40%;">
 		Source Field:<br>
@@ -74,7 +100,8 @@ html: function(isEvent, data) {
 			<option value="0" selected>Member ID</option>
 			<option value="1">Member Username</option>
 			<option value="2">Member Display Name</option>
-			<option value="3">Member Color</option>
+			<option value="3">Member Tag</option>
+			<option value="4">Member Color</option>
 		</select>
 	</div>
 	<div style="float: right; width: 55%;">
@@ -124,10 +151,18 @@ action: function(cache) {
 	const data = cache.actions[cache.index];
 	const info = parseInt(data.info);
 	const find = this.evalMessage(data.find, cache);
+	
+	//DBM Mods ~ Lasse
+	//Checks if server is large and caches all users to verify that offline users are tracked.
+	if(server.large == true) {
+		server.fetchMembers();
+	}
+	//End
+	
 	let result;
 	switch(info) {
 		case 0:
-			result = server.members.find('id', find);
+			result = server.members.find(element => element.id === find);
 			break;
 		case 1:
 			result = server.members.find(function(mem) {
@@ -135,14 +170,20 @@ action: function(cache) {
 			});
 			break;
 		case 2:
-			result = server.members.find('displayName', find);
-			break;
+			result = server.members.find(element => element.displayName === find);
+			break
 		case 3:
-			result = server.members.find('displayColor', find);
+			result = server.members.find(function(mem) {
+				return mem.user ? mem.user.tag === find : false;
+			});
 			break;
+		case 4:
+			result = server.members.find(element => element.displayColor === find);
+			break;;
 		default:
 			break;
 	}
+	
 	if(result !== undefined) {
 		const storage = parseInt(data.storage);
 		const varName = this.evalMessage(data.varName, cache);

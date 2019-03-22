@@ -28,6 +28,27 @@ subtitle: function(data) {
 },
 
 //---------------------------------------------------------------------
+	 // DBM Mods Manager Variables (Optional but nice to have!)
+	 //
+	 // These are variables that DBM Mods Manager uses to show information
+	 // about the mods for people to see in the list.
+	 //---------------------------------------------------------------------
+
+	 // Who made the mod (If not set, defaults to "DBM Mods")
+	 author: "DBM Mods & EGGSY",
+
+	 // The version of the mod (Defaults to 1.0.0)
+	 version: "1.9.1",
+
+	 // A short description to show on the mod line for this mod (Must be on a single line)
+	 short_description: "Added more options to default action.",
+
+	 // If it depends on any other mods by name, ex: WrexMODS if the mod uses something from WrexMods
+
+
+	 //---------------------------------------------------------------------
+
+//---------------------------------------------------------------------
 // Action Fields
 //
 // These are the fields for the action. These fields are customized
@@ -55,6 +76,7 @@ fields: ["storage", "varName", "comparison", "value", "iftrue", "iftrueVal", "if
 
 html: function(isEvent, data) {
 	return `
+	<div><p>This action has been modified by DBM Mods.</p></div><br>
 <div>
 	<div style="float: left; width: 35%;">
 		Variable:<br>
@@ -70,7 +92,7 @@ html: function(isEvent, data) {
 <div style="padding-top: 8px;">
 	<div style="float: left; width: 45%;">
 		Comparison Type:<br>
-		<select id="comparison" class="round">
+		<select id="comparison" class="round" onchange="glob.onChange1(this)">
 			<option value="0">Exists</option>
 			<option value="1" selected>Equals</option>
 			<option value="2">Equals Exactly</option>
@@ -78,9 +100,12 @@ html: function(isEvent, data) {
 			<option value="4">Greater Than</option>
 			<option value="5">Includes</option>
 			<option value="6">Matches Regex</option>
+			<option value="7">Length is Bigger Than</option>
+			<option value="8">Length is Smaller Than</option>
+			<option value="9">Length Equals</option>
 		</select>
 	</div>
-	<div style="float: right; width: 50%;">
+	<div style="float: right; width: 50%;" id="directValue">
 		Value to Compare to:<br>
 		<input id="value" class="round" type="text" name="is-eval">
 	</div>
@@ -101,6 +126,15 @@ html: function(isEvent, data) {
 init: function() {
 	const {glob, document} = this;
 
+	glob.onChange1 = function(event) {
+		if(event.value === "0") {
+			document.getElementById("directValue").style.display = 'none';
+		} else {
+			document.getElementById("directValue").style.display = null;
+		}
+	};
+
+	glob.refreshVariableList(document.getElementById('storage'));
 	glob.onChangeTrue(document.getElementById('iftrue'));
 	glob.onChangeFalse(document.getElementById('iffalse'));
 },
@@ -149,6 +183,15 @@ action: function(cache) {
 			case 6:
 				result = Boolean(val1.match(new RegExp('^' + val2 + '$', 'i')));
 				break;
+			case 7:
+				result = Boolean(val1.length > val2);
+				break;
+			case 8:
+				result = Boolean(val1.length < val2);
+				break;
+			case 9: //Added by Lasse
+			  result = Boolean(val1.length == val2);
+			  break;
 		}
 	}
 	this.executeResults(result, data, cache);

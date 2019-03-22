@@ -80,14 +80,14 @@ html: function(isEvent, data) {
 	</div>
 </div><br><br><br>
 <div style="padding-top: 8px;">
-	<div style="float: left; width: 45%;">
+	<div style="float: left; width: 35%;">
 		Control Type:<br>
 		<select id="changeType" class="round">
 			<option value="0" selected>Set Value</option>
 			<option value="1">Add Value</option>
 		</select>
 	</div>
-	<div style="float: right; width: 50%;">
+	<div style="float: right; width: 60%;">
 		Value:<br>
 		<input id="value" class="round" type="text" name="is-eval"><br>
 	</div>

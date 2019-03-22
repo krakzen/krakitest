@@ -126,13 +126,13 @@ action: function(cache) {
 	let result;
 	switch(info) {
 		case 0:
-			result = server.roles.find('id', find);
+			result = server.roles.find(element => element.id === find);
 			break;
 		case 1:
-			result = server.roles.find('name', find);
+			result = server.roles.find(element => element.name === find);
 			break;
 		case 2:
-			result = server.roles.find('color', find);
+			result = server.roles.find(element => element.color === find);
 			break;
 		default:
 			break;
@@ -141,10 +141,8 @@ action: function(cache) {
 		const storage = parseInt(data.storage);
 		const varName = this.evalMessage(data.varName, cache);
 		this.storeValue(result, storage, varName, cache);
-		this.callNextAction(cache);
-	} else {
-		this.callNextAction(cache);
 	}
+	this.callNextAction(cache);
 },
 
 //---------------------------------------------------------------------

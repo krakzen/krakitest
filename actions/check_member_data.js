@@ -14,7 +14,7 @@ name: "Check Member Data",
 // This is the section the action will fall into.
 //---------------------------------------------------------------------
 
-section: "Conditions",
+section: "Deprecated",
 
 //---------------------------------------------------------------------
 // Action Subtitle

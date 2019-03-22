@@ -57,7 +57,7 @@ html: function(isEvent, data) {
 	return `
 <div>
 	<div style="float: left; width: 35%;">
-		Source Image:<br>
+		Source Emoji:<br>
 		<select id="emoji" class="round" onchange="glob.onChange1(this)">
 			<option value="0" selected>Specific Emoji</option>
 			<option value="1">Temp Variable</option>
@@ -111,7 +111,7 @@ action: function(cache) {
 	const varName = this.evalMessage(data.varName, cache);
 	let emoji;
 	if(type === 0) {
-		emoji = server.emojis.find('name', varName);
+		emoji = server.emojis.find(element => element.name === varName);
 	} else {
 		emoji = this.getVariable(type, varName, cache);
 	}

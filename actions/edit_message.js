@@ -30,7 +30,7 @@ subtitle: function(data) {
 		'Global Variable'
 	];
 	const index = parseInt(data.storage);
-	return data.storage === "0" ? `${names[index]}` : `${names[index]} - ${data.varName}`;
+	return data.storage === "0" ? `${names[index]}` : `${names[index]} (${data.varName})`;
 },
 
 //---------------------------------------------------------------------
@@ -112,7 +112,12 @@ action: function(cache) {
 	const storage = parseInt(data.storage);
 	const varName = this.evalMessage(data.varName, cache);
 	const message = this.getMessage(storage, varName, cache);
-	if(message && message.delete) {
+	if(Array.isArray(message)) {
+		const content = this.evalMessage(data.message, cache);
+		this.callListFunc(message, 'edit', [content]).then(function() {
+			this.callNextAction(cache);
+		}.bind(this));
+	} else if(message && message.delete) {
 		const content = this.evalMessage(data.message, cache);
 		message.edit(content).then(function() {
 			this.callNextAction(cache);

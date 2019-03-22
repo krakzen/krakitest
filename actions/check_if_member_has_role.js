@@ -121,8 +121,18 @@ action: function(cache) {
 	const role = this.getRole(type2, varName2, cache);
 
 	let result = false;
-	if(member && member.roles && role) {
-		result = member.roles.array().includes(role);
+	if(role) {
+		if(Array.isArray(member)) {
+			result = member.every(function(mem) {
+				if(mem && mem.roles) {
+					return mem.roles.array().includes(role);
+				} else {
+					return false;
+				}
+			});
+		} else if(member && member.roles) {
+			result = member.roles.array().includes(role);
+		}
 	}
 	this.executeResults(result, data, cache);
 },

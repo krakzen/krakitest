@@ -46,7 +46,7 @@ variableStorage: function(data, varType) {
 // are also the names of the fields stored in the action's JSON data.
 //---------------------------------------------------------------------
 
-fields: ["channelName", "topic", "position", "storage", "varName"],
+fields: ["channelName", "categoryID", "topic", "position", "storage", "varName",],
 
 //---------------------------------------------------------------------
 // Command HTML
@@ -66,26 +66,32 @@ fields: ["channelName", "topic", "position", "storage", "varName"],
 
 html: function(isEvent, data) {
 	return `
-Name:<br>
-<input id="channelName" class="round" type="text"><br>
+	Name:<br>
+<input id="channelName" class="round" type="text" style="width: 95%"><br>
+
+Category ID:<br>
+<input id= "categoryID" class="round" type="text" placeholder="Keep this empty if you don't want to put it into a category" style="width: 95%"><br>
+
 <div style="float: left; width: 50%;">
 	Topic:<br>
 	<input id="topic" class="round" type="text"><br>
 </div>
+
 <div style="float: right; width: 50%;">
 	Position:<br>
 	<input id="position" class="round" type="text" placeholder="Leave blank for default!" style="width: 90%;"><br>
 </div>
+
 <div>
-	<div style="float: left; width: 35%;">
+	<div style="float: left; width: 45%;">
 		Store In:<br>
 		<select id="storage" class="round" onchange="glob.variableChange(this, 'varNameContainer')">
 			${data.variables[0]}
 		</select>
 	</div>
-	<div id="varNameContainer" style="display: none; float: right; width: 60%;">
+	<div id="varNameContainer" style="display: none; float: right; width: 50%;">
 		Variable Name:<br>
-		<input id="varName" class="round" type="text"><br>
+		<input id="varName" class="round" type="text" style="width: 90%"><br>
 	</div>
 </div>`
 },
@@ -117,6 +123,7 @@ action: function(cache) {
 	const server = cache.server;
 	if(server && server.createChannel) {
 		const name = this.evalMessage(data.channelName, cache);
+		const catid = this.evalMessage(data.categoryID, cache);
 		const storage = parseInt(data.storage);
 		server.createChannel(name, 'text').then(function(channel) {
 			const channelData = {};
@@ -127,6 +134,9 @@ action: function(cache) {
 				channelData.topic = this.evalMessage(data.topic, cache);
 			}
 			channel.edit(channelData);
+			if(catid) {
+				channel.setParent(catid);
+			}
 			const varName = this.evalMessage(data.varName, cache);
 			this.storeValue(channel, storage, varName, cache);
 			this.callNextAction(cache);

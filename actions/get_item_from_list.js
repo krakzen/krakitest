@@ -17,6 +17,27 @@ name: "Get Item from List",
 section: "Lists and Loops",
 
 //---------------------------------------------------------------------
+// DBM Mods Manager Variables (Optional but nice to have!)
+//
+// These are variables that DBM Mods Manager uses to show information
+// about the mods for people to see in the list.
+//---------------------------------------------------------------------
+
+// Who made the mod (If not set, defaults to "DBM Mods")
+author: "DBM & SeikiMatt",
+
+// The version of the mod (Defaults to 1.0.0)
+version: "1.9", //Added in 1.9
+
+// A short description to show on the mod line for this mod (Must be on a single line)
+short_description: "Fix for current beta version.",
+
+// If it depends on any other mods by name, ex: WrexMODS if the mod uses something from WrexMods
+
+
+//---------------------------------------------------------------------
+
+//---------------------------------------------------------------------
 // Action Subtitle
 //
 // This function generates the subtitle displayed next to the name.
@@ -163,43 +184,50 @@ init: function() {
 //---------------------------------------------------------------------
 
 action: function(cache) {
-	const data = cache.actions[cache.index];
-	const storage = parseInt(data.list);
-	const varName = this.evalMessage(data.varName, cache);
-	const list = this.getList(storage, varName, cache);
+    const data = cache.actions[cache.index];
+    const storage = parseInt(data.list);
+    const varName = this.evalMessage(data.varName, cache);
+    const list = this.getList(storage, varName, cache);
 
-	const type = parseInt(data.getType);
-	let result;
-	switch(type) {
-		case 0:
-			result = list[0];
-			break;
-		case 1:
-			result = list[list.length - 1];
-			break;
-		case 2:
-			result = list[Math.floor(Math.random() * list.length)];
-			break;
-		case 3:
-			const position = parseInt(this.evalMessage(data.position));
-			if(position < 0) {
-				result = list[0];
-			} else if(position >= list.length) {
-				result = list[list.length - 1];
-			} else {
-				result = list[position];
-			}
-			break;
-	}
+    const type = parseInt(data.getType);
+    let result;
+    switch (type) {
+      case 0:
+        result = list[0];
+        break;
+      case 1:
+        result = list[list.length - 1];
+        break;
+      case 2:
+        result = list[Math.floor(Math.random() * list.length)];
+        break;
+      case 3:
+        const posout = this.evalMessage(data.position, cache);
 
-	if(result) {
-		const varName2 = this.evalMessage(data.varName2, cache);
-		const storage2 = parseInt(data.storage);
-		this.storeValue(result, storage2, varName2, cache);
-	}
+        if (typeof posout === "string") {
+          var position = parseInt(posout);
+        } else {
+          var position = posout;
+        }
 
-	this.callNextAction(cache);
-},
+        if (position < 0) {
+          result = list[0];
+        } else if (position >= list.length) {
+          result = list[list.length - 1];
+        } else {
+          result = list[position];
+        }
+        break;
+    }
+
+    if (result) {
+      const varName2 = this.evalMessage(data.varName2, cache);
+      const storage2 = parseInt(data.storage);
+      this.storeValue(result, storage2, varName2, cache);
+    }
+
+    this.callNextAction(cache);
+  },
 
 //---------------------------------------------------------------------
 // Action Bot Mod

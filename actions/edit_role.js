@@ -137,7 +137,11 @@ action: function(cache) {
 	const storage = parseInt(data.storage);
 	const varName = this.evalMessage(data.varName, cache);
 	const role = this.getRole(storage, varName, cache);
-	if(role && role.edit) {
+	if(Array.isArray(role)) {
+		this.callListFunc(role, 'edit', [roleData]).then(function() {
+			this.callNextAction(cache);
+		}.bind(this));
+	} else if(role && role.edit) {
 		role.edit(roleData).then(function(role) {
 			this.callNextAction(cache);
 		}.bind(this)).catch(this.displayError.bind(this, data, cache));

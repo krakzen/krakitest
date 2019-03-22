@@ -14,7 +14,7 @@ name: "Control Member Data",
 // This is the section the action will fall into.
 //---------------------------------------------------------------------
 
-section: "Member Control",
+section: "Deprecated",
 
 //---------------------------------------------------------------------
 // Action Subtitle
@@ -123,10 +123,22 @@ action: function(cache) {
 			this.displayError(data, cache, e);
 		}
 		if(val !== undefined) {
-			if(isAdd) {
-				member.addData(dataName, val);
+			if(Array.isArray(member)) {
+				if(isAdd) {
+					member.forEach(function(mem) {
+						if(mem && mem.addData) mem.addData(dataName, val)
+					});
+				} else {
+					member.forEach(function(mem) {
+						if(mem && mem.setData) mem.setData(dataName, val)
+					});
+				}
 			} else {
-				member.setData(dataName, val);
+				if(isAdd) {
+					member.addData(dataName, val);
+				} else {
+					member.setData(dataName, val);
+				}
 			}
 		}
 	}

@@ -28,6 +28,27 @@ subtitle: function(data) {
 },
 
 //---------------------------------------------------------------------
+// DBM Mods Manager Variables (Optional but nice to have!)
+//
+// These are variables that DBM Mods Manager uses to show information
+// about the mods for people to see in the list.
+//---------------------------------------------------------------------
+
+// Who made the mod (If not set, defaults to "DBM Mods")
+author: "DBM & TotallyNotTwo",
+
+// The version of the mod (Defaults to 1.0.0)
+version: "1.9.2", //Added in 1.9.2
+
+// A short description to show on the mod line for this mod (Must be on a single line)
+short_description: "Added more options to default action.",
+
+// If it depends on any other mods by name, ex: WrexMODS if the mod uses something from WrexMods
+
+
+//---------------------------------------------------------------------
+
+//---------------------------------------------------------------------
 // Action Storage Function
 //
 // Stores the relevant variable info for the editor.
@@ -47,7 +68,7 @@ variableStorage: function(data, varType) {
 // are also the names of the fields stored in the action's JSON data.
 //---------------------------------------------------------------------
 
-fields: ["list", "varName", "start", "middle", "end", "storage", "varName2"],
+fields: ["list", "varName", "start", "middle", "end", "storage", "varName2", "sort"],
 
 //---------------------------------------------------------------------
 // Command HTML
@@ -67,6 +88,7 @@ fields: ["list", "varName", "start", "middle", "end", "storage", "varName2"],
 
 html: function(isEvent, data) {
 	return `
+	<div><p>This action has been modified by DBM Mods.</p></div><br>
 <div>
 	<div style="float: left; width: 35%;">
 		Source List:<br>
@@ -77,8 +99,15 @@ html: function(isEvent, data) {
 	<div id="varNameContainer" style="display: none; float: right; width: 60%;">
 		Variable Name:<br>
 		<input id="varName" class="round" type="text" list="variableList"><br>
+	</div><br><br><br>
+	<div>
+		Sort List:<br>
+		<select id="sort" class="round" style="width: 90%;">
+			<option value="0">Sort By Name</option>
+			<option value="1" selected>Don't Sort</option>
+		</select>
 	</div>
-</div><br><br><br>
+</div><br><br>
 <div style="padding-top: 8px; display: table;">
 	<div style="display: table-cell;">
 		Start Characters:<br>
@@ -134,7 +163,16 @@ action: function(cache) {
 	const storage = parseInt(data.list);
 	const varName = this.evalMessage(data.varName, cache);
 	const list = this.getList(storage, varName, cache);
+	const sort = parseInt(data.sort);
 
+	switch(sort) {
+		case 0:
+			list.sort();
+			break;
+		case 1:
+			break;
+	}
+			
 	const start = this.evalMessage(data.start, cache).replace('\\n', '\n');
 	const middle = this.evalMessage(data.middle, cache).replace('\\n', '\n');
 	const end = this.evalMessage(data.end, cache).replace('\\n', '\n');
